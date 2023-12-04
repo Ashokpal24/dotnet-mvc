@@ -12,9 +12,9 @@ namespace MvcMovie.Controllers
         }
 
         // GET: /HelloWorld/Welcome
-        public string Welcome(string name, int age = 1)
+        public string Welcome(string name, int ID = 1)
         {
-            return HtmlEncoder.Default.Encode($"Hello {name}, your age is {age} years");
+            return HtmlEncoder.Default.Encode($"Hello {name}, ID : {ID}");
         }
     }
 }
