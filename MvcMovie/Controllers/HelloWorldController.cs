@@ -1,3 +1,4 @@
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MvcMovie.Controllers
@@ -11,9 +12,9 @@ namespace MvcMovie.Controllers
         }
 
         // GET: /HelloWorld/Welcome
-        public string Welcome()
+        public string Welcome(string name, int age = 1)
         {
-            return "This is the welcome action method...";
+            return HtmlEncoder.Default.Encode($"Hello {name}, your age is {age} years");
         }
     }
 }
