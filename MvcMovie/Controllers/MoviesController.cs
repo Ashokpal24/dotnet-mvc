@@ -15,7 +15,7 @@ public class MoviesController : Controller
     }
 
     // GET: Movies
-    public async Task<IActionResult> Index(string searchString)
+    public async Task<IActionResult> Index(string SearchString)
     {
         if (_context.Movie == null)
         {
@@ -23,9 +23,9 @@ public class MoviesController : Controller
         }
         var movies = from m in _context.Movie select m;
 
-        if (!String.IsNullOrEmpty(searchString))
+        if (!String.IsNullOrEmpty(SearchString))
         {
-            movies = movies.Where(s => s.Title!.Contains(searchString));
+            movies = movies.Where(s => s!.Title!.ToLower().Contains(SearchString.ToLower()));
         }
 
         return View(await movies.ToListAsync());
