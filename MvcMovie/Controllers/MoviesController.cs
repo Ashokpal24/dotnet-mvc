@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Localization;
 using MvcMovie.Data;
 using MvcMovie.Models;
 
@@ -15,12 +17,15 @@ public class MoviesController : Controller
     }
 
     // GET: Movies
-    public async Task<IActionResult> Index(string SearchString)
+    public async Task<IActionResult> Index(string MovieGenre, string SearchString)
     {
         if (_context.Movie == null)
         {
             return Problem("Entity set 'MvcMovieContext.Movie' is null");
         }
+
+        IQueryable<String> genreQuery = from m in _context.Movie orderby m.Genre select m.Genre;
+
         var movies = from m in _context.Movie select m;
 
         if (!String.IsNullOrEmpty(SearchString))
@@ -28,7 +33,17 @@ public class MoviesController : Controller
             movies = movies.Where(s => s!.Title!.ToLower().Contains(SearchString.ToLower()));
         }
 
-        return View(await movies.ToListAsync());
+        if (!String.IsNullOrEmpty(MovieGenre))
+        {
+            movies = movies.Where(x => x.Genre == MovieGenre);
+        }
+        var MovieGenreVM = new MovieGenreViewModel
+        {
+            Genres = new SelectList(await genreQuery.Distinct().ToListAsync()),
+            Movies = await movies.ToListAsync()
+        };
+
+        return View(MovieGenreVM);
 
     }
 
